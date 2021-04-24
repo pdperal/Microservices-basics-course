@@ -4,17 +4,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Play.Catalog.Service.Entities;
 using Play.Common.Mongodb;
 using Play.Common.Settings;
+using Play.Inventory.Entities;
 
-namespace Play.Catalog.Service
+namespace Play.Inventory
 {
     public class Startup
     {
-        private ServiceSettings _serviceSettings;
-        private string _collectionName = "items";
-
+        private string _collectionName = "inventoryitems";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,21 +23,13 @@ namespace Play.Catalog.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            _serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
-
             services.AddMongo()
-                .AddMongoRepository<Item>(_collectionName);
+                .AddMongoRepository<InventoryItem>(_collectionName);
 
-            services.AddControllers(options =>
-            {
-                // CreatedAtRoute doesnot redirect to the route correctly cause .net core 3.0+ removes the
-                // Async sufix from methods, then it cannot find the method to redirect
-                options.SuppressAsyncSuffixInActionNames = false;
-            });
-
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Inventory", Version = "v1" });
             });
         }
 
@@ -50,7 +40,7 @@ namespace Play.Catalog.Service
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Play.Catalog v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Play.Inventory v1"));
             }
 
             app.UseHttpsRedirection();

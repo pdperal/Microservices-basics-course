@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Play.Common": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Teste"
+      }
+    }
+  }
+}
