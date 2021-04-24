@@ -1,21 +1,20 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Play.Catalog.Service.Entities;
+using Play.Common.Mongodb;
+using Play.Common.Settings;
 
 namespace Play.Catalog.Service
 {
     public class Startup
     {
+        private ServiceSettings _serviceSettings;
+        private string _collectionName = "items";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,8 +25,18 @@ namespace Play.Catalog.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            _serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
 
-            services.AddControllers();
+            services.AddMongo()
+                .AddMongoRepository<Item>(_collectionName);
+
+            services.AddControllers(options =>
+            {
+                // CreatedAtRoute doesnot redirect to the route correctly cause .net core 3.0+ removes the
+                // Async sufix from methods, then it cannot find the method to redirect
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog.Service", Version = "v1" });
