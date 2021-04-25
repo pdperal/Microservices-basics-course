@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Play.Catalog.Service.Entities;
+using Play.Common.MassTransit;
 using Play.Common.Mongodb;
 using Play.Common.Settings;
 
@@ -13,7 +14,7 @@ namespace Play.Catalog.Service
     public class Startup
     {
         private ServiceSettings _serviceSettings;
-        private string _collectionName = "items";
+        private const string _collectionName = "items";
 
         public Startup(IConfiguration configuration)
         {
@@ -29,6 +30,8 @@ namespace Play.Catalog.Service
 
             services.AddMongo()
                 .AddMongoRepository<Item>(_collectionName);
+
+            services.AddMassTransitWithRabbitMQ();
 
             services.AddControllers(options =>
             {

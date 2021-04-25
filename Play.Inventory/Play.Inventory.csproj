@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Play.Catalog.Contracts\Play.Catalog.Contracts.csproj" />
     <ProjectReference Include="..\Play.Common\Play.Common.csproj" />
   </ItemGroup>
 
