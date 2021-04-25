@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Play.Common.Mongodb;
-using Play.Common.Settings;
 using Play.Inventory.Entities;
 
 namespace Play.Inventory

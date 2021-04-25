@@ -1,13 +1,26 @@
-# docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo
+version: '3.4'
 
-version: "3.8"
-
-services: 
+services:
   mongo:
     image: mongo
     container_name: mongo
     ports:
       - 27017:27017
-
+  play.catalog:
+    image: ${DOCKER_REGISTRY-}playcatalog
+    container_name: catalog
+    build:
+      context: .
+      dockerfile: Play.Catalog\Dockerfile
+    ports:
+      - 5001:80
+  play.inventory:
+    image: ${DOCKER_REGISTRY-}playinventory
+    container_name: inventory
+    build:
+      context: .
+      dockerfile: Play.Inventory\Dockerfile
+    ports:
+      - 5005:80
 volumes: 
   mongodbdata:

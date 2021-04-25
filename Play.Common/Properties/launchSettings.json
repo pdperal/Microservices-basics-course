@@ -3,7 +3,7 @@
     "Play.Common": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Teste"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }
