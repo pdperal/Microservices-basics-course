@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Play.Catalog.Service.Controllers
 {
     [ApiController]
-    [Route("/api/items")]
+    [Route("api/items")]
     public class ItemsController : ControllerBase
     {
         private readonly IRepository<Item> _itemsRepository;
@@ -32,7 +32,6 @@ namespace Play.Catalog.Service.Controllers
         }
 
         [HttpGet("{id}")]
-
         public async Task<ActionResult<ItemDTO>> GetByIdAsync(Guid id)
         {
             var item = await _itemsRepository.GetAsync(id);

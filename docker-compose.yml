@@ -24,3 +24,4 @@ services:
       - 5005:80
 volumes: 
   mongodbdata:
+  

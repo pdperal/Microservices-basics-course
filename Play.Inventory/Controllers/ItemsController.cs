@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Play.Common.Repositories;
+using Play.Inventory.Clients;
 using Play.Inventory.DTO;
 using Play.Inventory.Entities;
 using Play.Inventory.Utils;
@@ -15,10 +16,12 @@ namespace Play.Inventory.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IRepository<InventoryItem> _itemsRepository;
+        private readonly CatalogClient _catalogClient;
 
-        public ItemsController(IRepository<InventoryItem> repository)
+        public ItemsController(IRepository<InventoryItem> repository, CatalogClient catalogClient)
         {
             _itemsRepository = repository;
+            _catalogClient = catalogClient;
         }
 
         [HttpGet]
@@ -29,10 +32,16 @@ namespace Play.Inventory.Controllers
                 return BadRequest();
             }
 
-            var items = (await _itemsRepository.GetAllAsync(item => item.UserId == userId))
-                .Select(x => x.AsDTO());
+            var catalogItemList = await _catalogClient.GetCatalogItemsAsync();
+            var inventoryItemList = await _itemsRepository.GetAllAsync(item => item.UserId == userId);
 
-            return Ok(items);
+            var inventoryItemsDto = inventoryItemList.Select(inventoryItem =>
+            {
+                var catalogItem = catalogItemList.Single(catalogItem => catalogItem.Id == inventoryItem.CatalogItemId);
+                return inventoryItem.AsDTO(catalogItem.Name, catalogItem.Description);
+            });
+
+            return Ok(inventoryItemsDto);
         }
         [HttpPost]
         public async Task<ActionResult> PostAsync(GrantItemContract grantItemsContract)

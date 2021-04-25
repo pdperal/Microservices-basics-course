@@ -2,5 +2,5 @@
 
 namespace Play.Inventory.DTO
 {
-    public record InventoryItemDTO(Guid CatalogItemId, int Quantity, DateTimeOffset AcquiredDate);
+    public record InventoryItemDTO(Guid CatalogItemId, int Quantity, DateTimeOffset AcquiredDate, string Name, string Description);
 }
